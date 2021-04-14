@@ -95,7 +95,7 @@ namespace Homework9
                 switch (command)
                 {
                     case "1":
-                        PrintStudents(students);
+                        Student.PrintStudents(students);
                         break;
                     case "2":
                         Console.WriteLine("В какую группу добавить студента?");
@@ -108,27 +108,27 @@ namespace Homework9
                         Console.WriteLine("Введите №:");
                         var inputGroup = int.Parse(Console.ReadLine());
                         Student newstudent = new Student();
-                        newstudent = AddStudent(groups[inputGroup]);
+                        newstudent = Student.AddStudent(groups[inputGroup]);
                         students.Add(newstudent);
                         break;
                     case "3":
-                        EditStudent(students, groups);
+                        Student.EditStudent(students, groups);
                         break;
                     case "4":
-                        Removestudent(students);
+                        Student.Removestudent(students);
                         break;
                     case "5":
-                        PrintGroups(groups);
+                        Group.PrintGroups(groups);
                         break;
                     case "6":
-                        var newgroup = AddGroup(groups);
+                        var newgroup = Group.AddGroup(groups);
                         groups.Add(newgroup);
                         break;
                     case "7":
-                        EditGroup(groups);
+                        Group.EditGroup(groups);
                         break;
                     case "8":
-                        RemoveGroup(groups);
+                        Group.RemoveGroup(groups);
                         break;
                     case "Q":
                     case "q":
@@ -138,195 +138,12 @@ namespace Homework9
             }
 
         }
-        private static void PrintStudents(List<Student> students)
-        {
-            Console.WriteLine("Список студентов:");
-            foreach (var student in students)
-            {
-                Console.Write($"{student.ID}. {student.Name} {student.SurName}");
-                Console.Write(" Оценки: ");
-                foreach (var mark in student.Marks)
-                {
-                    Console.Write(mark + " ");
-                }
-                Console.Write(student.Group.Title);
-                Console.WriteLine();
-            }
-        }
+       
+        
 
+        
 
-        private static Student AddStudent(Group group)
-        {
-            Student newStudent = new Student();
-            Console.WriteLine("Введите ID номер студента по образцу: ХХХХХ");
-            newStudent.ID = Console.ReadLine();
-            Console.WriteLine("Введите имя студента:");
-            newStudent.Name = Console.ReadLine();
-            Console.WriteLine("Введите фамилию студента:");
-            newStudent.SurName = Console.ReadLine();
-            Console.WriteLine("Введите оценки студента:");
-            newStudent.Marks = new List<int>();
-            while (true)
-            {
-                var command = Console.ReadLine();
-                if (command == "")
-                    break;
-                else
-                {
-                    var mark = int.Parse(command.Trim());
-                    newStudent.Marks.Add(mark);
-                }
-            }
-            newStudent.Group = group;
-            return newStudent;
-        }
-
-        private static List<Student> Removestudent(List<Student> students)
-        {
-            Console.WriteLine("Введите ID студента:");
-            for (int i = 0; i < students.Count; i++)
-            {
-                var removeStudent = Console.ReadLine();
-                if (removeStudent == students[i].ID)
-                {
-                    students.RemoveAt(i);
-                    Console.WriteLine("Студент удален.");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Студент не найден.");
-                    break;
-                }
-            }
-            return students;
-        }
-
-        private static void EditStudent(List<Student> students, List<Group> groups)
-        {
-            Console.WriteLine("Введите ID студента:");
-            var id = Console.ReadLine();
-            var studentToUpdate = students.FirstOrDefault(s => s.ID == id);
-            if (studentToUpdate == null)
-            {
-                Console.WriteLine("Студент не найден.");
-                return;
-            }
-            Console.WriteLine("Введите новые данные студента");
-            Console.WriteLine("Введите имя студента: ");
-            var firstName = Console.ReadLine();
-            Console.WriteLine("Введите фамилию студента: ");
-            var surName = Console.ReadLine();
-
-            studentToUpdate.Name =
-                string.IsNullOrWhiteSpace(firstName)
-                ? studentToUpdate.Name
-                : firstName;
-
-            studentToUpdate.SurName =
-               string.IsNullOrWhiteSpace(surName)
-              ? studentToUpdate.SurName
-              : surName;
-
-            Console.WriteLine("Введите оценки студента: ");
-
-            List<int> newMarks = new List<int>();
-
-            while (true)
-            {
-                var mark = Console.ReadLine();
-                if (mark == "")
-                    break;
-                else
-                {
-                    var newmark = int.Parse(mark);
-                    newMarks.Add(newmark);
-                }
-
-            }
-
-            studentToUpdate.Marks = newMarks;
-
-            Console.WriteLine("Введите номер группы: ");
-            var groupNumber = Console.ReadLine();
-            for (int i = 0; i < groups.Count; i++)
-            {
-                if (groupNumber != "")
-                {
-                    var group = groups.FirstOrDefault(g => g.Number == groupNumber);
-                    if (group == null)
-                    {
-                        Console.WriteLine("Группа не найдена.");
-                        return;
-                    }
-                    studentToUpdate.Group = group;
-                    break;
-                }
-
-            }
-            
-        }
-
-        private static void PrintGroups(List<Group> groups)
-        {
-            Console.WriteLine("Список групп:");
-            foreach (var group in groups)
-            {
-                Console.WriteLine($"{group.Number} {group.Title}");
-            }
-
-        }
-
-        private static Group AddGroup(List<Group> groups)
-        {
-            Console.WriteLine("Введите номер группы:");
-            var number = Console.ReadLine();
-            Console.WriteLine("Введите название группы:");
-            var title = Console.ReadLine();
-            Group group = new Group { Number = number, Title = title };
-            return group;
-        }
-
-        private static List<Group> RemoveGroup(List<Group> groups)
-        {
-            Console.WriteLine("Введите номер группы:");
-            for (int i = 0; i < groups.Count; i++)
-            {
-                var removeGroup = Console.ReadLine();
-                if (removeGroup == groups[i].Number)
-                {
-                    groups.RemoveAt(i);
-                    Console.WriteLine("Группа удалена.");
-                    break;
-                }
-                else
-                {
-                    Console.WriteLine("Группа не найдена.");
-                    break;
-                }
-            }
-            return groups;
-        }
-
-        private static void EditGroup(List<Group> groups)
-        {
-            Console.WriteLine("Введите номер группы:");
-            var numberGroup = Console.ReadLine();
-            var groupToUpdate = groups.FirstOrDefault(g => g.Number == numberGroup);
-            if (groupToUpdate == null)
-            {
-                Console.WriteLine("Группа не найдена.");
-                return;
-            }
-            Console.WriteLine("Введите новые данные группы");
-            Console.WriteLine("Введите название группы: ");
-            var newTitle = Console.ReadLine();
-            
-            groupToUpdate.Title =
-                string.IsNullOrWhiteSpace(newTitle)
-                ? groupToUpdate.Title
-                : newTitle;
-        }
+        
 
     }
 }
